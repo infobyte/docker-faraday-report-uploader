@@ -5,4 +5,10 @@ ADD src /src
 
 RUN pip install faraday-cli
 
-ENTRYPOINT ["/entrypoint.sh"]
+ARG HOST
+ARG USERNAME
+ARG PASSWORD
+ARG WORKSPACE
+ARG FILES
+
+ENTRYPOINT ./entrypoint.sh $HOST $USERNAME $PASSWORD $WORKSPACE $FILES
