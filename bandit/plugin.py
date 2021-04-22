@@ -7,8 +7,8 @@ class BanditPlugin(PluginXMLFormat):
     Example plugin to parse bandit output.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *arg, **kwargs):
+        super().__init__(*arg, **kwargs)
         self.identifier_tag = 'testsuite'
         self.extension = ".xml"
         self.id = "Bandit"
@@ -26,10 +26,9 @@ class BanditPlugin(PluginXMLFormat):
     def parseOutputString(self, output):
         bp = BanditParser(output)
 
-        host = self._get_host_name()
-        host_id = self.createAndAddHost(host)
-
         for vuln in bp.vulns:
+            host_id = self.createAndAddHost(vuln['path'])
+
             self.createAndAddVulnToHost(
                 host_id=host_id,
                 name=vuln['name'],
@@ -39,18 +38,6 @@ class BanditPlugin(PluginXMLFormat):
             )
 
         return True
-
-    def _get_host_name(self):
-        try:
-            filename = self.vulns_data['command']['params'].split('/')[-1].lower()
-            if filename.endswith('_faraday_bandit.xml'):
-                return filename.lower().replace('_faraday_bandit.xml', '')
-
-            return filename
-        except:
-            pass
-
-        return 'bandit-report'
 
 
 class BanditParser:
@@ -80,5 +67,6 @@ class BanditParser:
 
         return vulns
 
-def createPlugin():
-    return BanditPlugin()
+
+def createPlugin(ignore_info=False):
+    return BanditPlugin(ignore_info=ignore_info)
