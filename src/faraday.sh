@@ -14,7 +14,8 @@ faraday::create_workspace() {
   local FARADAY_WORKSPACE=$1
 
   echo "Creating workspace $FARADAY_WORKSPACE if it doesn't exists"
-  faraday-cli create_ws $FARADAY_WORKSPACE
+  faraday-cli workspace create $FARADAY_WORKSPACE
+  faraday-cli workspace select $FARADAY_WORKSPACE
   echo "Workspace $FARADAY_WORKSPACE created/selected successfully"
 }
 
@@ -23,7 +24,7 @@ faraday::upload_report() {
   local FARADAY_REPORT_FILENAME=$2
 
   echo "Uploading report to $FARADAY_WORKSPACE"
-  faraday-cli process_report -w $FARADAY_WORKSPACE $FARADAY_REPORT_FILENAME
+  faraday-cli tool report $FARADAY_REPORT_FILENAME
 
   echo "Faraday import finished successfully"
 }
